@@ -60,6 +60,14 @@ allprojects {
 
 //配置子模块依赖,所有子模块都会有
 subprojects{
+    if(project.name == "summer-common"){
+        println "this is common module"
+        dependencies {
+            compileOnly 'org.projectlombok:lombok'
+            annotationProcessor 'org.projectlombok:lombok'
+        }
+        return
+    }
     dependencies {
         implementation 'com.lmax:disruptor'
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
