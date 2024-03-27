@@ -1,6 +1,6 @@
 //定义版本
 ext.versions = [
-        springboot: '3.2.0' ,//spring boot版本号 3.2.2
+        springboot: '3.2.4' ,//spring boot版本号 3.2.2
         auth0: '4.4.0' ,
         druid: '1.2.22' ,
         springfox: '3.0.0' ,
