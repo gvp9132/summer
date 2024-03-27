@@ -1,0 +1,75 @@
+// gradle自身会用到的相关设置
+buildscript {
+    apply from: 'dependencies.gradle' // 引入依赖版本控制文件
+    repositories {
+        mavenLocal()
+        maven { name "gradle-plugin"; url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { name "Alibaba" ; url "https://maven.aliyun.com/repository/public" }
+        maven { name "gradle" ; url 'https://plugins.gradle.org/m2/' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath libraries.'spring-boot-gradle-plugin' //此处控制spring版本
+    }
+}
+// 针对所有project的配置，包含根项目
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: "java-library"
+
+    group 'org.gvp.summer' //项目组
+    version '1.0.0-SNAPSHOT'  // 项目版本号
+    // 指定编译版本
+    sourceCompatibility = 21
+    targetCompatibility = 21
+    // 配置字符编码
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+    }
+
+    repositories {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/spring' }
+        maven { url 'https://maven.aliyun.com/repository/spring-plugin' }
+        maven { url "https://maven.pkg.jetbrains.space/public/p/ktor/eap" }
+        mavenCentral()
+    }
+
+    dependencyManagement{
+        // 插件允许你导入已经存在的Maven Bom来使用其依赖的关系管理：
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${versions.'springCloud'}"
+        }
+        // 依赖管理 ,子模块可以使用这里管理的依赖不用版本号
+        dependencies{
+            // 遍历libraries中的值动态添加依赖管理
+            libraries.each {
+                dependency it.value
+            }
+        }
+    }
+}
+
+
+//配置子模块依赖,所有子模块都会有
+subprojects{
+    dependencies {
+        implementation 'com.lmax:disruptor'
+        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation "org.springframework.boot:spring-boot-starter-log4j2"
+        modules {
+            module("org.springframework.boot:spring-boot-starter-logging") {
+                replacedBy("org.springframework.boot:spring-boot-starter-log4j2", "Use Log4j2 instead of Logback")
+            }
+        }
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+    }
+}

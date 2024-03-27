@@ -1,0 +1,5 @@
+rootProject.name = 'summer'
+include 'summer-gateway'
+include 'summer-common'
+include 'summer-graves'
+

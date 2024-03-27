@@ -1,0 +1,36 @@
+//定义版本
+ext.versions = [
+        springboot: '3.2.0' ,//spring boot版本号 3.2.2
+        auth0: '4.4.0' ,
+        druid: '1.2.22' ,
+        springfox: '3.0.0' ,
+        disruptor: '3.4.4' ,
+        mybatisPlus: '3.5.5' ,
+        jsr310: '2.16.1' ,
+        caffeine:'3.1.8',
+        commonsPool2:'2.12.0' , // redis数据库连接池
+        springCloud: '2023.0.0' , // spring cloud bom 版本
+        alibabaNacos: '2022.0.0.0' , //
+        r2dbc: '1.0.6',
+        reflectionsVersion: '0.10.2' ,
+        mybatisSpringVersion: '3.0.3'
+]
+// 定义依赖
+ext.libraries = [
+        'spring-boot-gradle-plugin': "org.springframework.boot:spring-boot-gradle-plugin:${versions.springboot}" ,
+        'java-jwt': "com.auth0:java-jwt:${versions.auth0}" ,
+        'druid-spring-boot-starter': "com.alibaba:druid-spring-boot-3-starter:${versions.druid}" ,
+        'springfox-boot-starter': "io.springfox:springfox-boot-starter:${versions.springfox}" ,
+        'disruptor': "com.lmax:disruptor:${versions.disruptor}" ,
+        'mybatis-plus-boot-starter': "com.baomidou:mybatis-plus-spring-boot3-starter:${versions.mybatisPlus}" ,
+        'jackson-datatype-jsr310': "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${versions.jsr310}" ,
+        // 此组件是spring gateway的ReactiveLoadBalancerClientFilter的缓存组件
+        'caffeine':"com.github.ben-manes.caffeine:caffeine:${versions.caffeine}" ,
+        'commons-pool2':"org.apache.commons:commons-pool2:${versions.commonsPool2}" ,
+        'nacos-discovery': "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:${versions.alibabaNacos}" ,
+        'nacos-config': "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:${versions.alibabaNacos}" ,
+        'r2dbc': "io.asyncer:r2dbc-mysql:${versions.r2dbc}" ,
+        'reflections': "org.reflections:reflections:${versions.reflectionsVersion}" ,
+        'mybatis-spring': "org.mybatis:mybatis-spring:${versions.mybatisSpringVersion}"
+
+]
