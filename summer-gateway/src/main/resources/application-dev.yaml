@@ -1,0 +1,29 @@
+server:
+  port: 9527
+logging:
+  level:
+    web: debug
+    org.springframework.r2dbc: debug
+    sql: debug
+    org.gvp: debug
+spring:
+  threads:
+    virtual:
+      enabled: true
+summer:
+  gateway:
+    jwt:
+      secret: summer
+      expire-time: 3600
+      jwt-id: jwt-id
+      issuer: summer-gvp9132
+      audience:
+        - summer-gateway
+        - summer-provider
+    security:
+      allowed-origins:
+        - http://localhost:3000
+      ignore-urls:
+        - /actuator/**
+        - /login/**
+        - /logout/**
