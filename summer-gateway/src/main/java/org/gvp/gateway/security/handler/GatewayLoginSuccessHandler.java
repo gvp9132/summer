@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.gvp.common.http.Result;
 import org.gvp.common.http.ResultCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
@@ -23,9 +24,8 @@ public class GatewayLoginSuccessHandler implements ServerAuthenticationSuccessHa
     public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange, Authentication authentication) {
        log.debug("用户登录成功");
         Result build = Result.builder()
-                .resultCode(ResultCode.SUCCESS)
+                .resultCode(ResultCode.LOGIN_SUCCESS)
                 .build();
-
-        return this.responseHandler.responseWrite(webFilterExchange.getExchange(), build);
+        return this.responseHandler.responseWrite(webFilterExchange.getExchange(), build, HttpStatus.OK);
     }
 }
