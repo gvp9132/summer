@@ -24,10 +24,11 @@ public class ResponseHandler {
      * 响应数据写出到响应体
      * @param exchange 服务器web交换对象
      * @param data 需要返回给客户端的数据
+     * @param status 响应状态码
      */
-    public Mono<Void> responseWrite(ServerWebExchange exchange, Object data) {
+    public Mono<Void> responseWrite(ServerWebExchange exchange, Object data, HttpStatus status) {
         // 设置响应的内容和状态码
-        exchange.getResponse().setStatusCode(HttpStatus.OK);
+        exchange.getResponse().setStatusCode(status);
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
         return Mono.defer(
                 () -> Mono.just(exchange.getResponse())
