@@ -32,6 +32,11 @@ public class Result<T> {
         this.timestamp = timestamp;
         this.data = data;
     }
+    /** 设置http响应状态码 */
+    public void setResponseCode(ResultCode resultCode){
+        this.code = resultCode.code();
+        this.message = resultCode.message();
+    }
     /** 构建一个总是成功的响应,但是如果数据为空,则success为false */
     public static <T> Result<T> ok(T data){
         return new Result<T>(200, "请求成功", data != null, Instant.now(), data) ;
