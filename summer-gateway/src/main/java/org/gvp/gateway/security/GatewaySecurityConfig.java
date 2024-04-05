@@ -1,10 +1,7 @@
-package org.gvp.gateway.security.config;
+package org.gvp.gateway.security;
 
 import lombok.RequiredArgsConstructor;
-import org.gvp.gateway.security.SecurityProperties;
-import org.gvp.gateway.security.handler.GatewayAuthenticationEntryPoint;
-import org.gvp.gateway.security.handler.GatewayLoginFailureHandler;
-import org.gvp.gateway.security.handler.GatewayLoginSuccessHandler;
+import org.gvp.gateway.security.handler.*;
 import org.gvp.gateway.security.manager.GatewayAuthorizationManager;
 import org.gvp.gateway.security.manager.TokenAuthenticationManager;
 import org.gvp.gateway.service.SecurityUserService;
@@ -64,7 +61,18 @@ public class GatewaySecurityConfig {
      * 用户认证入口点,用户身份认证失败处理
      */
     private final GatewayAuthenticationEntryPoint authenticationEntryPoint;
-
+    /**
+     * 用户访问资源权限不足处理器
+     */
+    private final GatewayAccessDeniedHandler accessDeniedHandler;
+    /**
+     * 用户退出登录处理器
+     */
+    private final GatewayLogoutHandler logoutHandler;
+    /**
+     * 用户退出登录成功处理器
+     */
+    private final GatewayLogoutSuccessHandler logoutSuccessHandler;
 
     /**
      * 配置安全拦截机制
@@ -91,10 +99,18 @@ public class GatewaySecurityConfig {
                                 .authenticationManager(this.authenticationManager())
                                 .securityContextRepository(this.securityContextRepository)
                 )
-        ;
-
-        http.csrf(ServerHttpSecurity.CsrfSpec::disable);
-        http.cors(corsSpec -> corsSpec.configurationSource(this.configurationSource()));
+                .logout(logout ->
+                        logout
+                                .logoutHandler(this.logoutHandler)
+                                .logoutSuccessHandler(this.logoutSuccessHandler)
+                                .requiresLogout(ServerWebExchangeMatchers.pathMatchers(HttpMethod.POST, "/logout"))
+                )
+                .exceptionHandling(exceptionHandlingSpec ->
+                        exceptionHandlingSpec
+                                .accessDeniedHandler(this.accessDeniedHandler)
+                                .authenticationEntryPoint(this.authenticationEntryPoint))
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .cors(corsSpec -> corsSpec.configurationSource(this.configurationSource()));
         return http.build();
     }
 
