@@ -1,19 +1,18 @@
 //定义版本
 ext.versions = [
-        springboot: '3.2.4' ,//spring boot版本号 3.2.2
+        springboot: '3.2.5' ,//spring boot版本号 3.2.2
         auth0: '4.4.0' ,
         druid: '1.2.22' ,
         springfox: '3.0.0' ,
         disruptor: '3.4.4' ,
-        mybatisPlus: '3.5.5' ,
-        jsr310: '2.16.1' ,
+        mybatisPlus: '3.5.6' ,
+        jsr310: '2.17.0' ,
         caffeine:'3.1.8',
         commonsPool2:'2.12.0' , // redis数据库连接池
-        springCloud: '2023.0.0' , // spring cloud bom 版本
-        alibabaNacos: '2022.0.0.0' , //
-        r2dbc: '1.0.6',
+        springCloud: '2023.0.1' , // spring cloud bom 版本
+        alibabaNacos: '2023.0.1.0' , //
+        r2dbc: '1.1.3',
         reflectionsVersion: '0.10.2' ,
-        mybatisSpringVersion: '3.0.3'
 ]
 // 定义依赖
 ext.libraries = [
@@ -31,6 +30,5 @@ ext.libraries = [
         'nacos-config': "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:${versions.alibabaNacos}" ,
         'r2dbc': "io.asyncer:r2dbc-mysql:${versions.r2dbc}" ,
         'reflections': "org.reflections:reflections:${versions.reflectionsVersion}" ,
-        'mybatis-spring': "org.mybatis:mybatis-spring:${versions.mybatisSpringVersion}"
 
 ]
