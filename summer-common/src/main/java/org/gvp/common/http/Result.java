@@ -10,7 +10,6 @@ import java.time.Instant;
  * @version 2.0
  */
 @Data
-//@Builder
 public class Result<T> {
     /** 全局响应状态码 */
     private int code;
@@ -55,7 +54,7 @@ public class Result<T> {
     }
 
     /**
-     * 返回结果构建器
+     * 返回结果构建器,反回数据的时候不可以返回该类,否则会报错
      */
     public static class ResultBuilder<T>{
         private int code;
@@ -63,27 +62,27 @@ public class Result<T> {
         private boolean success;
         private T data;
         /** 设置响应的状态码 */
-        public ResultBuilder code(int code){
+        public ResultBuilder<T> code(int code){
             this.code = code;
             return this;
         }
         /** 设置响应的提示信息 */
-        public ResultBuilder message(String message){
+        public ResultBuilder<T> message(String message){
             this.message = message;
             return this;
         }
         /** 设置响应数据成功状态 */
-        public ResultBuilder success(boolean success){
+        public ResultBuilder<T> success(boolean success){
             this.success = success;
             return this;
         }
         /** 设置响应的真实数据 */
-        public ResultBuilder data(T data){
+        public ResultBuilder<T> data(T data){
             this.data = data;
             return this;
         }
         /** 通过http状态码设置响应的状态码和响应提示信息 */
-        public ResultBuilder resultCode(ResultCode resultCode){
+        public ResultBuilder<T> resultCode(ResultCode resultCode){
             this.code = resultCode.code();
             this.message = resultCode.message();
             return this;

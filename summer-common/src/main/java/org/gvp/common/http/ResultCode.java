@@ -21,7 +21,7 @@ public enum ResultCode {
     /**
      * 用户给身份未经认证
      */
-    UNAUTHORIZED(401, "用户为经过认证"),
+    UNAUTHORIZED(401, "用户未经过认证"),
 
     LOGIN_FAILURE(402,"登录失败"),
     LOGIN_FAILURE_USER_NOT_FOUND(4021,"登录失败,用户名不存在"),
@@ -45,7 +45,7 @@ public enum ResultCode {
     /**
      * token已过期,需要重新登录
      */
-    TOKEN_EXPIRED(498, "token已过期超时"),
+    TOKEN_EXPIRED(424, "token已过期超时"),
 
     // 499 需要令牌
     /**
