@@ -1,5 +1,6 @@
 package org.gvp.gateway.security.jwt;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.time.Instant;
@@ -22,7 +23,9 @@ public class TokenInfo {
     /** token是否过期 */
     private boolean expired;
     /** 解析token的时候是否出现错误 */
+    @JsonIgnore
     private boolean error;
     /** 解析token的时候出现的错误信息 */
+    @JsonIgnore
     private String errorMessage;
 }

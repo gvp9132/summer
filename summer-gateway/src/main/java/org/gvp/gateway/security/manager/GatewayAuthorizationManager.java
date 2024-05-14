@@ -15,8 +15,17 @@ import reactor.core.publisher.Mono;
 @Component
 public class GatewayAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
     @Override
-    public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext object) {
-        log.debug("用户请求权限验证: {}",object.getExchange().getRequest().getPath());
-        return null;
+    public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
+        log.debug("用户请求权限验证: {}",context.getExchange().getRequest().getPath());
+
+        return authentication.flatMap(
+                auth -> {
+                    log.debug("用户权限验证: {}",auth.getName());
+                    log.debug("auth: {}",auth.getAuthorities());
+                    return Mono.just(new AuthorizationDecision(true));
+                }
+        );
+
+//        return Mono.just(new AuthorizationDecision(false));
     }
 }
