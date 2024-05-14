@@ -7,7 +7,7 @@ package org.gvp.gateway.security.jwt;
  */
 public interface JsonWebToken<T> {
     public static final String TOKEN_ID_KEY = "tokenId";
-    public static final String TOKEN_PREFIX = "Bearer";
+    public static final String TOKEN_PREFIX = "Bearer ";
 
     /**
      * 生成token方法

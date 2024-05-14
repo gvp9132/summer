@@ -22,6 +22,8 @@ public class JsonWebTokenProperties {
     private String issuer ;
     /** jwt接收者 */
     private String[] audience ;
-    /** jwt过期时间,单位秒 */
+    /** jwt token过期时间,单位秒 */
     private long expireTime ;
+    /** token日期的时差,单位是小时 */
+    private long clockSkew ;
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 /**
@@ -49,8 +50,11 @@ public class DefaultJsonWebToken implements JsonWebToken<TokenInfo>{
         try {
             tokenInfo.setToken(builder.sign(this.algorithm));
             tokenInfo.setTokenId(tokenId);
-            tokenInfo.setCreateTime(created);
-            tokenInfo.setExpireTime(expire);
+            // token创建时间和过期,增加8小时时差
+            tokenInfo.setCreateTime(created.plus(this.properties.getClockSkew(), ChronoUnit.HOURS));
+            tokenInfo.setExpireTime(expire.plus(this.properties.getClockSkew(), ChronoUnit.HOURS));
+//            tokenInfo.setCreateTime(created);
+//            tokenInfo.setExpireTime(expire);
             tokenInfo.setUsername(payload);
         }catch (JWTCreationException e){
             log.error("create user token failed", e);
@@ -80,7 +84,9 @@ public class DefaultJsonWebToken implements JsonWebToken<TokenInfo>{
             DecodedJWT verify = JWT.require(this.algorithm)
                     .withJWTId(this.properties.getJwtId())
                     .withIssuer(this.properties.getIssuer())
-                    .build().verify(token);
+                    .build().verify(token.substring(JsonWebToken.TOKEN_PREFIX.length()));
+            tokenInfo.setCreateTime(verify.getIssuedAtAsInstant());
+            tokenInfo.setExpireTime(verify.getExpiresAtAsInstant());
             tokenInfo.setUsername(verify.getSubject());
             tokenInfo.setTokenId(verify.getClaim(JsonWebToken.TOKEN_ID_KEY).asString());
         }catch (IllegalArgumentException ae){
