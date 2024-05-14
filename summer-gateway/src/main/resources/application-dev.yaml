@@ -20,9 +20,11 @@ summer:
       audience:
         - summer-gateway
         - summer-provider
+      clock-skew: 8
     security:
       allowed-origins:
         - http://localhost:3000
+        - http://localhost:5173
       ignore-urls:
         - /actuator/**
         - /login/**
