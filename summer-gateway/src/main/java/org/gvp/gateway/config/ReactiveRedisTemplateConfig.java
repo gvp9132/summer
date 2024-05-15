@@ -13,6 +13,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import org.gvp.gateway.pojo.CacheUser;
+import org.gvp.gateway.pojo.SecurityUser;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -85,6 +86,13 @@ public class ReactiveRedisTemplateConfig {
         RedisSerializationContext<String, CacheUser> build =
                 this.builderSerializationContext(CacheUser.class);
         return new ReactiveRedisTemplate<String,CacheUser>(redisConnectionFactory, build);
+    }
+
+    @Bean
+    public ReactiveRedisTemplate<String, SecurityUser> userRedisTemplate(ReactiveRedisConnectionFactory redisConnectionFactory){
+        RedisSerializationContext<String, SecurityUser> build =
+                this.builderSerializationContext(SecurityUser.class);
+        return new ReactiveRedisTemplate<String,SecurityUser>(redisConnectionFactory, build);
     }
 
     /**
