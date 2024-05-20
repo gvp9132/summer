@@ -72,7 +72,7 @@ public class GatewaySecurityContextRepository implements ServerSecurityContextRe
                     return Mono.empty();
                 }))
                 .map( user -> {
-                    log.debug("用户登录信息: {}",user);
+                    log.debug("根据用户令牌创建用户登录信息: {}",user);
                     return new SecurityContextImpl(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getRoles(),
                             user.getRoles().stream().map(SimpleGrantedAuthority::new).toList()));
                 });

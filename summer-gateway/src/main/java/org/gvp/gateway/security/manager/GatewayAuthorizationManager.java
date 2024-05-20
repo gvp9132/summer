@@ -8,7 +8,6 @@ import org.springframework.http.server.RequestPath;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.pattern.PathPatternParser;
@@ -34,8 +33,9 @@ public class GatewayAuthorizationManager implements ReactiveAuthorizationManager
     }
 
     private Mono<AuthorizationDecision> checkHandler(Authentication auth){
-        log.debug("用户请求权限验证: {}-{}", auth.getName(), auth.getAuthorities());
-        return this.pathService.findByRoleNames(auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+        log.debug("用户请求权限验证,用户名: {}, 用户角色信息: {}", auth.getName(), auth.getAuthorities());
+        return Flux.fromIterable(auth.getAuthorities())
+                .flatMap(e -> this.pathService.findByAuthority(e.getAuthority()))
                 .filter(this::checkPath)
                 .next()
                 .map(p -> {
