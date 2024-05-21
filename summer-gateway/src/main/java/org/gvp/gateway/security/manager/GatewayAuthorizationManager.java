@@ -29,10 +29,16 @@ public class GatewayAuthorizationManager implements ReactiveAuthorizationManager
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
         this.requestPath = context.getExchange().getRequest().getPath();
-        return authentication.flatMap(this::checkHandler);
+        return authentication
+                .flatMap(auth -> Flux.fromIterable(auth.getAuthorities())
+                        .flatMap(e -> this.pathService.findByAuthority(e.getAuthority()))
+                        .any(this::checkPath))
+                .map(AuthorizationDecision::new)
+                .switchIfEmpty(Mono.just(new AuthorizationDecision(false)));
+//        return authentication.flatMap(this::checkHandler);
     }
 
-    private Mono<AuthorizationDecision> checkHandler(Authentication auth){
+    private Mono<AuthorizationDecision> checkHandler(Authentication auth) {
         log.debug("用户请求权限验证,用户名: {}, 用户角色信息: {}", auth.getName(), auth.getAuthorities());
         return Flux.fromIterable(auth.getAuthorities())
                 .flatMap(e -> this.pathService.findByAuthority(e.getAuthority()))
@@ -51,6 +57,7 @@ public class GatewayAuthorizationManager implements ReactiveAuthorizationManager
 
     /**
      * 检查用户请求路径权限是否匹配
+     *
      * @param path 用户拥有的路径请求对象
      */
     private boolean checkPath(SecurityPath path) {
