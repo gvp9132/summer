@@ -1,5 +1,6 @@
 package org.gvp.gateway.cache;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -18,5 +19,16 @@ public interface CacheHandler<T> {
      * @param key 数据的缓存key
      */
     Mono<T> get(String key);
+
+
+    /**
+     * 根据key的匹配模式扫面keys
+     * <br/>
+     * <code>this.redisTemplate.scan(ScanOptions.scanOptions().match(pattern).count(100).build());</code>
+     * @param pattern key的匹配模式
+     * @return 返回匹配的key列表
+     */
+    default Flux<String> scanKeys(String pattern){ return null;}
+
 
 }

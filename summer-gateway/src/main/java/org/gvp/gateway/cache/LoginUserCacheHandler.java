@@ -24,7 +24,7 @@ public class LoginUserCacheHandler implements CacheHandler<CacheUser>{
 
     @Override
     public Mono<CacheUser> get(String key) {
-       log.debug("从缓存读取用户登录信息: {}",key);
+       log.trace("从缓存读取用户登录信息: {}",key);
         return this.reactiveRedisTemplate.opsForValue().get(CACHE_USER_PREFIX + key);
     }
 

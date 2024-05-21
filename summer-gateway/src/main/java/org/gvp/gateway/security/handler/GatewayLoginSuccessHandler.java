@@ -11,6 +11,7 @@ import org.gvp.gateway.security.jwt.TokenInfo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
@@ -20,6 +21,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 用户登录成功处理器,处理用户登录成功后的逻辑操作
@@ -44,11 +46,10 @@ public class GatewayLoginSuccessHandler implements ServerAuthenticationSuccessHa
         log.debug("当前用户权限信息: {}", authentication.getAuthorities());
         CacheUser cacheUser = new CacheUser();
         cacheUser.setUsername(username);
-//        cacheUser.setRoles(authentication.getAuthorities());
         cacheUser.setTokenId(token.getTokenId());
         cacheUser.setExpireTime(token.getExpireTime().toString());
-        // TODO: 获取角色信息
-        cacheUser.setRoles(Arrays.asList("ROLE_ADMIN","ROLE_USER"));
+        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        cacheUser.setRoles(roles);
 
         webFilterExchange.getExchange().getResponse().getHeaders().setBearerAuth(token.getToken());
         // 设置允许用户通过响应头中的Authorization获取token

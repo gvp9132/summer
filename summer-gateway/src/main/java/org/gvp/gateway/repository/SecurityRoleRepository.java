@@ -13,7 +13,7 @@ public interface SecurityRoleRepository extends R2dbcRepository<SecurityRole, In
     @Query("""
     select r.`id` as `id`,`authority` from
         security_role r
-            left outer join security_user_role ur on r.id = ur.role_id
+            left outer join security_user_role ur on r.id = ur.role_id and ur.`delete` = false
         where ur.user_id = :userId
     """)
     Flux<SecurityRole> searchRolesByUserId(@Param("userId") Integer userId);

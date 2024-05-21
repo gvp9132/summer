@@ -72,7 +72,7 @@ public class DefaultJsonWebToken implements JsonWebToken<TokenInfo>{
     }
     @Override
     public TokenInfo parseToken(String token) {
-        log.debug("parse token: {}", token);
+        log.trace("parse token: {}", token);
         TokenInfo tokenInfo = new TokenInfo();
         if (!StringUtils.hasText(token) || !token.startsWith(JsonWebToken.TOKEN_PREFIX)){
             log.error("token is empty or not start with Bearer");

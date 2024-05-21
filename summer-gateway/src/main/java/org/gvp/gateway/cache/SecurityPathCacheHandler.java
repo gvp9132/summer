@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.gvp.gateway.pojo.SecurityPath;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -52,5 +53,21 @@ public class SecurityPathCacheHandler implements CacheHandler<SecurityPath>{
 
     public void clearPathList(String authority){
         this.redisTemplate.unlink(ROLE_PATH_PREFIX + authority).subscribe(e -> log.debug("清除角色 [{}] 路径数据",authority));
+    }
+
+    /**
+     * 删除缓存中的所有角色和请求路径关系
+     */
+    public Mono<Long> clearCache() {
+        return this.scanKeys(ROLE_PATH_PREFIX + "*")
+                .doOnNext( e -> log.debug("准备删除的key: {}" , e))
+                .flatMap(this.redisTemplate::unlink).count();
+
+    }
+
+
+    @Override
+    public Flux<String> scanKeys(String pattern){
+        return this.redisTemplate.scan(ScanOptions.scanOptions().match(pattern).count(100).build());
     }
 }
