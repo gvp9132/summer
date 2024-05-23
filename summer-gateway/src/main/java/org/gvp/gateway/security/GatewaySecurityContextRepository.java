@@ -3,7 +3,7 @@ package org.gvp.gateway.security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.gvp.gateway.cache.LoginUserCacheHandler;
-import org.gvp.gateway.pojo.CacheUser;
+import org.gvp.gateway.dao.CacheUser;
 import org.gvp.gateway.security.jwt.JsonWebToken;
 import org.gvp.gateway.security.jwt.TokenInfo;
 import org.springframework.http.HttpHeaders;

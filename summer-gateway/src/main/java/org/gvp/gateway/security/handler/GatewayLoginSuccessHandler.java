@@ -5,21 +5,19 @@ import lombok.extern.log4j.Log4j2;
 import org.gvp.common.http.Result;
 import org.gvp.common.http.ResultCode;
 import org.gvp.gateway.cache.LoginUserCacheHandler;
-import org.gvp.gateway.pojo.CacheUser;
+import org.gvp.gateway.dao.CacheUser;
 import org.gvp.gateway.security.jwt.JsonWebToken;
 import org.gvp.gateway.security.jwt.TokenInfo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.gvp.gateway.pojo;
+package org.gvp.gateway.dao;
 
 import lombok.Data;
 
