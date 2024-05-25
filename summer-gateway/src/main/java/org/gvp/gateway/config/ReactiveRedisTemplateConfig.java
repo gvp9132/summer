@@ -12,12 +12,14 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import org.gvp.gateway.dao.CacheUser;
+import org.gvp.gateway.dto.CacheUser;
 import org.gvp.gateway.pojo.SecurityPath;
 import org.gvp.gateway.pojo.SecurityUser;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -29,8 +31,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.gvp.common.constant.DataTime.*;
-
+import static org.gvp.common.constant.DateTimeConstant.*;
 @Configuration
 public class ReactiveRedisTemplateConfig {
 
@@ -102,6 +103,14 @@ public class ReactiveRedisTemplateConfig {
                 this.builderSerializationContext(SecurityPath.class);
         return new ReactiveRedisTemplate<String,SecurityPath>(redisConnectionFactory, build);
     }
+
+//    @Primary
+//    @Bean
+//    public ReactiveRedisTemplate<String, RouteDefinition> routerRedisTemplate(ReactiveRedisConnectionFactory redisConnectionFactory){
+//        RedisSerializationContext<String, RouteDefinition> build =
+//                this.builderSerializationContext(RouteDefinition.class);
+//        return new ReactiveRedisTemplate<String,RouteDefinition>(redisConnectionFactory, build);
+//    }
 
     /**
      * 构建一个指定类型的序列化上下文

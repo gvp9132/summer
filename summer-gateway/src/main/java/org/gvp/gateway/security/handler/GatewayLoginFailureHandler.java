@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.gvp.common.http.Result;
 import org.gvp.common.http.ResultCode;
+import org.gvp.gateway.global.ResponseHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;

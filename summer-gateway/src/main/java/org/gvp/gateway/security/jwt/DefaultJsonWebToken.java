@@ -8,14 +8,14 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.gvp.common.StringUtil;
+import org.gvp.common.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.UUID;
+import java.time.ZoneId;
+
 
 /**
  * 默认jwt操作接口实现类
@@ -51,8 +51,8 @@ public class DefaultJsonWebToken implements JsonWebToken<TokenInfo>{
             tokenInfo.setToken(builder.sign(this.algorithm));
             tokenInfo.setTokenId(tokenId);
             // token创建时间和过期,增加8小时时差
-            tokenInfo.setCreateTime(created.plus(this.properties.getClockSkew(), ChronoUnit.HOURS));
-            tokenInfo.setExpireTime(expire.plus(this.properties.getClockSkew(), ChronoUnit.HOURS));
+            tokenInfo.setCreateTime(created.atZone(ZoneId.systemDefault()).toLocalDateTime());
+            tokenInfo.setExpireTime(expire.atZone(ZoneId.systemDefault()).toLocalDateTime());
 //            tokenInfo.setCreateTime(created);
 //            tokenInfo.setExpireTime(expire);
             tokenInfo.setUsername(payload);
@@ -85,8 +85,8 @@ public class DefaultJsonWebToken implements JsonWebToken<TokenInfo>{
                     .withJWTId(this.properties.getJwtId())
                     .withIssuer(this.properties.getIssuer())
                     .build().verify(token.substring(JsonWebToken.TOKEN_PREFIX.length()));
-            tokenInfo.setCreateTime(verify.getIssuedAtAsInstant());
-            tokenInfo.setExpireTime(verify.getExpiresAtAsInstant());
+            tokenInfo.setCreateTime(verify.getIssuedAtAsInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            tokenInfo.setExpireTime(verify.getExpiresAtAsInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
             tokenInfo.setUsername(verify.getSubject());
             tokenInfo.setTokenId(verify.getClaim(JsonWebToken.TOKEN_ID_KEY).asString());
         }catch (IllegalArgumentException ae){
@@ -96,7 +96,7 @@ public class DefaultJsonWebToken implements JsonWebToken<TokenInfo>{
         }catch (TokenExpiredException ee){
             log.error("token is expired", ee);
             tokenInfo.setExpired(true);
-            tokenInfo.setExpireTime(ee.getExpiredOn());
+            tokenInfo.setExpireTime(ee.getExpiredOn().atZone(ZoneId.systemDefault()).toLocalDateTime());
             tokenInfo.setErrorMessage(ee.getMessage());
         }catch (JWTVerificationException ve){
             log.error("token verify failed", ve);

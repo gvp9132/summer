@@ -28,7 +28,7 @@ public class SecurityPathService {
      * 根据权限名字获取请求路径信息
      */
     public Flux<SecurityPath> findByAuthority(String authority) {
-        log.debug("根据用户权限名字查询权限请求路径信息: {}", authority);
+        log.trace("根据用户权限名字查询权限请求路径信息: {}", authority);
         return this.cacheHandler.getPathListByAuthority(authority)
                 .switchIfEmpty(this.pathRepository.searchByAuthority(authority)
                         .collectList().doOnNext(e -> this.cacheHandler.savePathList(authority,e))

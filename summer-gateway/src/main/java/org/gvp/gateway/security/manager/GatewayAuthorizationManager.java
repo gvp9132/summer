@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.gvp.gateway.pojo.SecurityPath;
 import org.gvp.gateway.service.SecurityPathService;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.server.RequestPath;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
@@ -24,15 +25,19 @@ public class GatewayAuthorizationManager implements ReactiveAuthorizationManager
     private final SecurityPathService pathService;
     private final PathPatternParser pathPatternParser;
     private RequestPath requestPath;
+    private HttpMethod requestMethod;
 
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {
         this.requestPath = context.getExchange().getRequest().getPath();
+        this.requestMethod = context.getExchange().getRequest().getMethod();
+        log.debug("用户请求权限验证: 请求方法: {}, 请求路径: {} ",this.requestMethod,this.requestPath);
         return authentication
                 .flatMap(auth -> Flux.fromIterable(auth.getAuthorities())
                         .flatMap(e -> this.pathService.findByAuthority(e.getAuthority()))
-                        .any(this::checkPath))
+                        .any(this::checkPath)
+                )
                 .map(AuthorizationDecision::new)
                 .switchIfEmpty(Mono.just(new AuthorizationDecision(false)));
 //        return authentication.flatMap(this::checkHandler);
@@ -61,7 +66,19 @@ public class GatewayAuthorizationManager implements ReactiveAuthorizationManager
      * @param path 用户拥有的路径请求对象
      */
     private boolean checkPath(SecurityPath path) {
-        log.debug("用户请求地址检查: 当前请求地址 ==> {}, 用户允许请求模式 : {}", this.requestPath, path.getPattern());
-        return pathPatternParser.parse(path.getPattern()).matches(this.requestPath);
+        log.debug("用户请求权限验证: {}--{}, 当前用户请求路径信息: {} ",this.requestMethod,this.requestPath,path);
+        if(pathPatternParser.parse(path.getPattern()).matches(this.requestPath) && checkMethod(path.getMethod())){
+            log.info("用户请求路径权限和请求方法验证通过: {}",path);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkMethod(String method){
+        if ("ANY".equals(method) || this.requestMethod.matches(method)) {
+            log.debug("用户请求方法验证成功");
+            return true;
+        }
+        return false;
     }
 }

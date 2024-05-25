@@ -3,7 +3,7 @@ package org.gvp.gateway.security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.gvp.gateway.cache.LoginUserCacheHandler;
-import org.gvp.gateway.dao.CacheUser;
+import org.gvp.gateway.dto.CacheUser;
 import org.gvp.gateway.security.jwt.JsonWebToken;
 import org.gvp.gateway.security.jwt.TokenInfo;
 import org.springframework.http.HttpHeaders;
@@ -36,10 +36,10 @@ public class GatewaySecurityContextRepository implements ServerSecurityContextRe
 
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
-        log.debug("加载网关安全上下文: {}",exchange.getRequest().getPath());
+        log.trace("加载网关安全上下文: {}",exchange.getRequest().getPath());
         // 从请求头中获取token
         String token = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        log.debug("用户请求头中的token认证信息: {}",token);
+        log.trace("用户请求头中的token认证信息: {}",token);
         // 验证token是否为空
         if (!StringUtils.hasLength(token)){
             log.warn("用户携带token认证信息为空");
@@ -47,7 +47,7 @@ public class GatewaySecurityContextRepository implements ServerSecurityContextRe
         }
         // 截取token
         TokenInfo tokenInfo = this.jsonWebToken.parseToken(token);
-        log.debug("解析的token信息: {}",tokenInfo);
+        log.trace("解析的token信息: {}",tokenInfo);
         if(tokenInfo.isExpired()){
             log.warn("用户token已过期");
             exchange.getResponse().setStatusCode(HttpStatus.FAILED_DEPENDENCY);
@@ -72,8 +72,8 @@ public class GatewaySecurityContextRepository implements ServerSecurityContextRe
                     return Mono.empty();
                 }))
                 .map( user -> {
-                    log.debug("根据用户令牌创建用户登录信息: {}",user);
-                    return new SecurityContextImpl(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getRoles(),
+                    log.debug("用户登录信息: {}",user);
+                    return new SecurityContextImpl(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getRoleIds(),
                             user.getRoles().stream().map(SimpleGrantedAuthority::new).toList()));
                 });
     }

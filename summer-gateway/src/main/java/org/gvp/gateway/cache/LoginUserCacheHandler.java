@@ -2,7 +2,7 @@ package org.gvp.gateway.cache;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.gvp.gateway.dao.CacheUser;
+import org.gvp.gateway.dto.CacheUser;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;

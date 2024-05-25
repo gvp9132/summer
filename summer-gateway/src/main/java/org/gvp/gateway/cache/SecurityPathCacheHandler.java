@@ -42,7 +42,6 @@ public class SecurityPathCacheHandler implements CacheHandler<SecurityPath>{
 
     public void savePathList(String authority, List<SecurityPath> pathList) {
         if (pathList == null || pathList.isEmpty()){
-            // TODO: 这里目前没办法缓存空数据,每次会查找数据库,需要处理
             log.warn("当前缓存的角色路径关系中路径信息为空: {} - {}",authority, pathList);
             return;
         }

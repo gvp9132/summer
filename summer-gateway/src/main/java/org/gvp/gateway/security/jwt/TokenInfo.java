@@ -1,9 +1,7 @@
 package org.gvp.gateway.security.jwt;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * jwt生成或者解析token的信息包装类
@@ -17,15 +15,13 @@ public class TokenInfo {
     /** token的唯一标识,表示用户登录时候被其他用户强制退出 */
     private String tokenId;
     /** token创建时间 */
-    private Instant createTime ;
+    private LocalDateTime createTime ;
     /** token过期时间 */
-    private Instant expireTime ;
+    private LocalDateTime expireTime ;
     /** token是否过期 */
     private boolean expired;
     /** 解析token的时候是否出现错误 */
-    @JsonIgnore
     private boolean error;
     /** 解析token的时候出现的错误信息 */
-    @JsonIgnore
     private String errorMessage;
 }

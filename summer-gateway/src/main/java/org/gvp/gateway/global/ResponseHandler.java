@@ -1,4 +1,4 @@
-package org.gvp.gateway.security.handler;
+package org.gvp.gateway.global;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

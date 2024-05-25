@@ -1,8 +1,10 @@
-package org.gvp.gateway.dao;
+package org.gvp.gateway.dto;
 
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,8 +17,12 @@ public class CacheUser implements Serializable {
     /** 当前登录成功的用户ID */
     private String tokenId;
     /** 用户登录的过期时间 */
-    private String expireTime;
+    private LocalDateTime expireTime;
     /** 当前登录成功的用户角色集合 */
-    private List<String> roles;
+    private List<String> roles = new ArrayList<String>();
+    /**
+     * 当前登录成功用户的角色ID集合
+     */
+    private List<Integer> roleIds = new ArrayList<Integer>();
 
 }

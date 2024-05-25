@@ -2,7 +2,7 @@ spring:
   r2dbc:
     password: 123456
     username: root
-    url: r2dbc:mysql://127.0.0.1:3307/summer?serverZoneId=Asia/Shanghai
+    url: r2dbc:mysql://localhost:3366/summer?serverZoneId=Asia/Shanghai
     pool:
       max-size: 8
       initial-size: 0
