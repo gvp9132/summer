@@ -3,6 +3,7 @@ package org.gvp.manager.repository.impl;
 import lombok.RequiredArgsConstructor;
 
 import org.gvp.manager.dto.MenuTreeData;
+import org.gvp.manager.dto.NavigateMenuData;
 import org.springframework.stereotype.Repository;
 import org.gvp.manager.repository.SecurityUserMenuRepository;
 import org.gvp.manager.mapper.SecurityUserMenuMapper;
@@ -17,7 +18,7 @@ public class SecurityUserMenuRepositoryImpl implements SecurityUserMenuRepositor
     private final SecurityUserMenuMapper securityUserMenuMapper;
 
     @Override
-    public List<String> selectUserMenuKeys(Integer userId) {
+    public List<String> searchUserMenuKeys(Integer userId) {
         return this.securityUserMenuMapper.selectUserMenuKeys(userId);
     }
 
@@ -32,17 +33,23 @@ public class SecurityUserMenuRepositoryImpl implements SecurityUserMenuRepositor
     }
 
     @Override
-    public List<MenuTreeData> searchNavigateMenuTreeData() {
-        return this.securityUserMenuMapper.selectMenuTreeData();
+    public List<NavigateMenuData> searchNavigateMenuByUserId(Integer userId) {
+        return this.securityUserMenuMapper.selectNavigateMenuByUserId(userId);
     }
 
     @Override
-    public List<MenuTreeData> searchNavigateMenuTreeDataByUserId(Integer userId) {
-        return this.securityUserMenuMapper.selectMenuTreeDataByUserId(userId);
+    public NavigateMenuData searchNavigateMenuDataById(Integer id) {
+        return null;
     }
 
-    @Override
-    public MenuTreeData searchNavigateMenuTreeDataById(Integer id) {
-        return this.securityUserMenuMapper.selectMenuTreeDataById(id);
-    }
+
+//    @Override
+//    public List<MenuTreeData> searchNavigateMenuTreeDataByUserId(Integer userId) {
+//        return this.securityUserMenuMapper.selectMenuTreeDataByUserId(userId);
+//    }
+//
+//    @Override
+//    public MenuTreeData searchNavigateMenuTreeDataById(Integer id) {
+//        return this.securityUserMenuMapper.selectMenuTreeDataById(id);
+//    }
 }

@@ -14,13 +14,13 @@ public class MenuTreeData implements TreeData<MenuTreeData>{
      */
     private Integer id;
     /**
-     * 菜单的路径地址(唯一标识)
-     */
-    private String key;
-    /**
      * 菜单父ID
      */
     private Integer parentId;
+    /**
+     * 菜单的路径地址(唯一标识)
+     */
+    private String key;
     /**
      * 权限树节点标题
      */
@@ -33,10 +33,6 @@ public class MenuTreeData implements TreeData<MenuTreeData>{
      * icon
      */
     private String icon;
-    /**
-     * 菜单路径,用于前端路由跳转
-     */
-    private String path ;
     /**
      * 是否显示选择框
      */

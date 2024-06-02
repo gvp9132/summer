@@ -18,4 +18,10 @@ public interface SecurityMenuRepository extends BaseRepository<SecurityMenu> {
      * 查找全部一级菜单
      */
     List<SecurityMenu> searchFirstLevel();
+
+    /**
+     * 根据父菜单ID查找菜单列表
+     * @param parentId 父菜单ID
+     */
+    List<SecurityMenu> searchByParentId(Integer parentId);
 }

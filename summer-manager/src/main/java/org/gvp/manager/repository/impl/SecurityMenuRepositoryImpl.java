@@ -18,6 +18,23 @@ public class SecurityMenuRepositoryImpl implements SecurityMenuRepository {
     private final SecurityMenuMapper securityMenuMapper;
 
     @Override
+    public List<SecurityMenu> searchByParentId(Integer parentId){
+        return this.securityMenuMapper.selectList(Wrappers.<SecurityMenu>lambdaQuery()
+                .select(
+                        SecurityMenu::getId,
+                        SecurityMenu::getKey,
+                        SecurityMenu::getParentId,
+                        SecurityMenu::getPath,
+                        SecurityMenu::getIcon,
+                        SecurityMenu::getLabel,
+                        SecurityMenu::getDescribe,
+                        SecurityMenu::getDisabled,
+                        SecurityMenu::getShow
+                )
+                .eq(SecurityMenu::getParentId, parentId));
+    }
+
+    @Override
     public int append(SecurityMenu pojo) {
         return this.securityMenuMapper.insert(pojo);
     }

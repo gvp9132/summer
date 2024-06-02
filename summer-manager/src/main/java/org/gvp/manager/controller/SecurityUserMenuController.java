@@ -7,6 +7,7 @@ import org.gvp.common.http.Result;
 import org.gvp.manager.dto.AuthorityTreeData;
 import org.gvp.manager.dto.AuthorityTreeUpdate;
 import org.gvp.manager.dto.MenuTreeData;
+import org.gvp.manager.dto.NavigateMenuData;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,7 @@ public class SecurityUserMenuController implements BaseController<SecurityUserMe
      * 获取用户导航菜单树数据
      */
     @GetMapping("/tree/navigate")
-    public Result<List<MenuTreeData>> queryUserMenuTree(HttpServletRequest request){
+    public Result<List<NavigateMenuData>> queryUserMenuTree(HttpServletRequest request){
         return Result.ok(this.securityUserMenuService.findUserMenuTree(request));
     }
     @Operation(value = "根据用户编号获取用户菜单处理权限树", param = "用户编号")

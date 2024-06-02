@@ -12,7 +12,7 @@
     </select>
 
     <!-- 根据用户编号查找用户分配的菜单信息,反回格式为导航菜单数据类型 -->
-    <select id="selectMenuTreeDataByUserId" resultType="org.gvp.manager.dto.MenuTreeData" parameterType="integer">
+    <select id="selectNavigateMenuByUserId" resultType="org.gvp.manager.dto.NavigateMenuData" parameterType="integer">
         select m.`id`,m.`parent_id`,m.`key`,m.`icon`,m.`label`,m.`path`
         from summer.security_menu m
                  left join summer.security_user_menu um on m.id = um.menu_id and um.`delete` = false
@@ -32,6 +32,10 @@
         where `delete` = false
     </select>
 
+
+
+
+
     <select id="selectUserMenuKeys" parameterType="integer" resultType="string">
         select m.`key`
         from summer.security_menu m
@@ -41,7 +45,7 @@
     </select>
 
     <select id="selectMenuTreeListByParentId" parameterType="integer" resultType="org.gvp.manager.dto.MenuTreeData">
-        select `id`, `key`, `parent_id`, `label` as `title`, `icon`, `show` as `checkable`
+        select `id`, `key`, `parent_id`, `label` as `title`, `icon`, `describe` as `explain`
         from summer.security_menu
         where `delete` = false and parent_id = #{patentId}
     </select>

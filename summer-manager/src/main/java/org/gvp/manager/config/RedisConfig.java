@@ -18,6 +18,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import lombok.extern.log4j.Log4j2;
 import org.gvp.common.constant.DateTimeConstant;
 import org.gvp.manager.dto.MenuTreeData;
+import org.gvp.manager.dto.NavigateMenuData;
+import org.gvp.manager.pojo.SecurityMenu;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -90,7 +92,19 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, MenuTreeData> navigateMenuRedisTemplateConfig(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, NavigateMenuData> navigateMenuRedisTemplateConfig(RedisConnectionFactory redisConnectionFactory) {
+        Jackson2JsonRedisSerializer<NavigateMenuData> serializer = new Jackson2JsonRedisSerializer<NavigateMenuData>(objectMapper ,NavigateMenuData.class);
+        RedisTemplate<String, NavigateMenuData> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(serializer);
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(serializer);
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate ;
+    }
+    @Bean
+    public RedisTemplate<String, MenuTreeData> menuTreeRedisTemplateConfig(RedisConnectionFactory redisConnectionFactory) {
         Jackson2JsonRedisSerializer<MenuTreeData> serializer = new Jackson2JsonRedisSerializer<MenuTreeData>(objectMapper ,MenuTreeData.class);
         RedisTemplate<String, MenuTreeData> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);

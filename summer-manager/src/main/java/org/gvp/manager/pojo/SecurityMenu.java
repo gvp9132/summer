@@ -56,6 +56,11 @@ public class SecurityMenu{
     @TableField(value = "`last`")
     private Boolean last;
     /**
+     * 菜单禁用状态
+     */
+    @TableField(value = "`disabled`")
+    private Boolean disabled;
+    /**
     * 菜单排序字段
     */
     @TableField(value = "`menu_order`")
