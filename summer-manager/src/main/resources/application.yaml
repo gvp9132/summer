@@ -1,0 +1,21 @@
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include:
+          - "*"
+  info:
+    env:
+      enabled: true
+spring:
+  threads:
+    virtual:
+      enabled: true
+  profiles:
+    active:
+      - dev
+      - db
+  web:
+    resources:
+      add-mappings: false

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- status表示log4j2本身日志级别: “trace”, “debug”, “info”, “warn”, “error”, “fatal” -->
+<!-- monitorInterval: 服务运行的时候可以修改log4j2的配置log4j2会在monitorInterval的时间重新更新一次配置 -->
+<!-- 彩色日志: -Dlog4j.skipJansi=false-->
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <property name="LOG_DIR" value="logs/${spring:spring.application.name}"/>
+        <property name="FILE_LOG_FORMAT">
+            %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] [%X{requestId}] %logger : %msg%n"
+        </property>
+        <!--  日志颜色支持 256色  WARN=bg_#5792e6 fg_#eef26b bold -->
+        <property
+                name="LOG_PATTERN_CONSOLE"
+                value="%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-15t] %X{requestId} %-3c{1.} }{
+                FATAL=white,
+                ERROR=red,
+                WARN=bg_#778899 fg_#FFD700 bold,
+                INFO=cyan,
+                DEBUG=green,
+                TRACE=blue
+                }: %msg%n%throwable" />
+    </Properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${LOG_PATTERN_CONSOLE}"/>
+        </Console>
+        <!-- immediateFlush为true时候每次日志都会写入到文件,为false时候会在缓冲区满了以后写入到文件,可能会丢失日志 -->
+        <RollingRandomAccessFile
+                immediateFlush="true"
+                name="RollingFileDebug"
+                fileName="${LOG_DIR}/debug.log"
+                filePattern="${LOG_DIR}/${spring:spring.application.name}-DEBUG-%d{yyyy-MM-dd}_%i.log.gz">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="${FILE_LOG_FORMAT}" />
+            <Policies>
+                <!--interval属性用来指定多久滚动一次，默认是1 hour -->
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件开始覆盖 -->
+            <DefaultRolloverStrategy max="15" />
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile immediateFlush="true" name="RollingFileInfo" fileName="${LOG_DIR}/info.log" filePattern="${LOG_DIR}/${spring:spring.application.name}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="${FILE_LOG_FORMAT}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="15" />
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile immediateFlush="true" name="RollingFileWarn" fileName="${LOG_DIR}/warn.log" filePattern="${LOG_DIR}/${spring:spring.application.name}-WARN-%d{yyyy-MM-dd}_%i.log.gz">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="${FILE_LOG_FORMAT}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="15" />
+        </RollingRandomAccessFile>
+        <RollingRandomAccessFile immediateFlush="true" name="RollingFileError" fileName="${LOG_DIR}/error.log" filePattern="${LOG_DIR}/${spring:spring.application.name}-ERROR-%d{yyyy-MM-dd}_%i.log.gz">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            <PatternLayout pattern="${FILE_LOG_FORMAT}" />
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" />
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="15" />
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <!-- 设置打印sql语句配置开始,以下两者配合使用,可以优化日志的输出信息,减少一些不必要信息的输出 -->
+        <!-- 设置java.sql包下的日志只打印DEBUG及以上级别的日志,此设置可以支持sql语句的日志打印 -->
+        <logger name="java.sql" level="DEBUG" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+        <!--  includeLocation="false": 设置是否在日志输出中包含日志记录的位置信息(文件名、行号等)。设置为 false 可以减少日志输出的信息量,提高性能 -->
+        <Root level="info" includeLocation="false">
+            <AppenderRef ref="Console"/>
+            <!--            <AppenderRef ref="RollingFileDebug"/>-->
+            <!--            <AppenderRef ref="RollingFileInfo"/>-->
+            <AppenderRef ref="RollingFileWarn" />
+            <AppenderRef ref="RollingFileError" />
+        </Root>
+    </Loggers>
+</Configuration>

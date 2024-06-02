@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: summer-manager
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: http://172.22.97.132:8848
+        group: GVP_DEV_GROUP
+        namespace: 9e52ae12-cff5-4776-8b0d-39fd632a086d
+        username: nacos
+        password: nacos
+      config:
+        enabled: true
+        file-extension: yaml
+        group: GVP_DEV_GROUP
+        server-addr: http://172.22.97.132:8848
+        namespace: 9e52ae12-cff5-4776-8b0d-39fd632a086d
+        password: nacos
+        username: nacos

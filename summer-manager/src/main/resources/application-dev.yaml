@@ -1,0 +1,52 @@
+server:
+  port: 8088
+logging:
+  level:
+    web: debug
+    org.gvp: debug
+    org.gvp.manager.feign.RemoteUserService: debug
+mybatis-plus:
+  type-aliases-package: org.gvp.manager.pojo
+  #  mapper-locations: classpath*:/mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-field: delete
+      logic-delete-value: true
+      logic-not-delete-value: false
+  configuration:
+    map-underscore-to-camel-case: true
+    #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    auto-mapping-behavior: full
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+  mapper-locations: /config/mapper/**/*.xml
+
+spring:
+  jackson:
+    default-property-inclusion: non_null
+  cloud:
+    openfeign:
+      # 请求和响应压缩
+      compression:
+        request:
+          enabled: true
+          # 最小压缩大小
+          min-request-size: 2048
+        response:
+          enabled: true
+      client:
+        config:
+          default:
+            # 连接超时时间
+            connect-timeout: 3000
+            # 读取超时时间
+            read-timeout: 3000
+          summer-gateway:
+            connect-timeout: 3000
+            read-timeout: 3000
+      httpclient:
+        hc5:
+          enabled: true
+summer:
+  manager:
+    config:
+      recursion-depth: 4

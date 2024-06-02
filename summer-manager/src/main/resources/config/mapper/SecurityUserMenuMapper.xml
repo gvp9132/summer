@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.gvp.manager.mapper.SecurityUserMenuMapper">
+
+    <!-- 查找全部可用菜单信息,将菜单信息装载为用户菜单树   -->
+    <select id="selectMenuTreeData" resultType="org.gvp.manager.dto.MenuTreeData">
+        select `id`,`parent_id`,`key`,`icon`,`label`,`path` from summer.security_menu
+        where `delete` = false and `show` = true
+    </select>
+
+    <!-- 根据用户编号查找用户分配的菜单信息,反回格式为导航菜单数据类型 -->
+    <select id="selectMenuTreeDataByUserId" resultType="org.gvp.manager.dto.MenuTreeData" parameterType="integer">
+        select m.`id`,m.`parent_id`,m.`key`,m.`icon`,m.`label`,m.`path`
+        from summer.security_menu m
+                 left join summer.security_user_menu um on m.id = um.menu_id and um.`delete` = false
+        where m.`delete` = false
+          and um.user_id = #{userId}
+    </select>
+
+    <!-- 根据编号查找导航菜单信息,如果show为false也会找到 -->
+    <select id="selectMenuTreeDataById" resultType="org.gvp.manager.dto.MenuTreeData" parameterType="integer">
+        select `id`,`parent_id`,`key`,`icon`,`label`,`path` from summer.security_menu
+        where `delete` = false and id = #{id}
+    </select>
+
+    <select id="selectMenuTreeList" resultType="org.gvp.manager.dto.MenuTreeData">
+        select `id`, `key`, `parent_id`, `label` as `title`, `icon`, `show` as `checkable`
+        from summer.security_menu
+        where `delete` = false
+    </select>
+
+    <select id="selectUserMenuKeys" parameterType="integer" resultType="string">
+        select m.`key`
+        from summer.security_menu m
+                 left join summer.security_user_menu um on m.id = um.menu_id and um.`delete` = false
+        where m.`delete` = false
+          and um.user_id = #{userId}
+    </select>
+
+    <select id="selectMenuTreeListByParentId" parameterType="integer" resultType="org.gvp.manager.dto.MenuTreeData">
+        select `id`, `key`, `parent_id`, `label` as `title`, `icon`, `show` as `checkable`
+        from summer.security_menu
+        where `delete` = false and parent_id = #{patentId}
+    </select>
+</mapper>
+
+
