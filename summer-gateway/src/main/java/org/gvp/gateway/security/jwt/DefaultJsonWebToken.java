@@ -94,7 +94,7 @@ public class DefaultJsonWebToken implements JsonWebToken<TokenInfo>{
             tokenInfo.setError(true);
             tokenInfo.setErrorMessage(ae.getMessage());
         }catch (TokenExpiredException ee){
-            log.error("token is expired", ee);
+            log.trace("token已经过期",ee.getMessage());
             tokenInfo.setExpired(true);
             tokenInfo.setExpireTime(ee.getExpiredOn().atZone(ZoneId.systemDefault()).toLocalDateTime());
             tokenInfo.setErrorMessage(ee.getMessage());

@@ -6,6 +6,7 @@ import org.gvp.gateway.dto.MysqlReplica;
 import org.gvp.gateway.service.MySqlInfoService;
 import org.gvp.gateway.service.RootService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -29,4 +30,9 @@ public class RootController {
         return this.mySqlInfoService.getMysqlInfo();
     }
 
+
+    @GetMapping("/pwd/encryption/{password}")
+    public Mono<Result<String>> encryption(@PathVariable String password){
+       return Mono.just(Result.<String>ok(this.rootService.encryption(password)));
+    }
 }

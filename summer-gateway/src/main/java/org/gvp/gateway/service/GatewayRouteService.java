@@ -18,7 +18,6 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.concurrent.locks.ReentrantLock;
 
 @Log4j2
 @Service
@@ -28,15 +27,13 @@ public class GatewayRouteService {
     private final GatewayRouteFactoryService routeFactoryService;
     private final RouteDefinitionCacheHandler cacheHandler;
     private final ObjectMapper objectMapper;
-    private final ReentrantLock lock = new ReentrantLock();
-
 
     private Flux<GatewayRoute> findGatewayRouteList() {
         return this.routeRepository.searchList();
     }
 
     public Flux<RouteDefinition> findRouteDefinition() {
-        log.debug("加载用户自定义网关路由信息");
+        log.trace("加载用户自定义网关路由信息");
         return this.cacheHandler.getRouteDefinitions()
                 .switchIfEmpty(this.findRouteDefinitionByDDB());
     }
@@ -51,6 +48,7 @@ public class GatewayRouteService {
                     log.debug("转换路由信息: {}", def);
                     return this.routeFactoryService.findByRouteId(route.getId())
                             .flatMap(factory -> {
+                                log.debug("解析路由工厂信息: {}",factory);
                                 if ("predicate".equals(factory.getType())) {
                                     PredicateDefinition pd = new PredicateDefinition();
                                     pd.setArgs(this.metadataToLinkedHashMap(factory.getArgs()));
@@ -58,7 +56,10 @@ public class GatewayRouteService {
                                     log.debug("转换路由断言工厂信息: {}", pd);
                                     def.getPredicates().add(pd);
                                 } else if ("filter".equals(factory.getType())) {
-                                    def.getFilters().add(new FilterDefinition());
+                                    FilterDefinition fd = new FilterDefinition();
+                                    fd.setArgs(this.metadataToLinkedHashMap(factory.getArgs()));
+                                    fd.setName(factory.getName());
+                                    def.getFilters().add(fd);
                                 } else {
                                     log.warn("没有解析到路由工厂信息: {}", factory);
                                 }
@@ -73,12 +74,13 @@ public class GatewayRouteService {
     /**
      * metadata元数据(String)转换为HashMap
      */
-    private HashMap metadataToHashMap(String metadata) {
+    private HashMap<String, Object> metadataToHashMap(String metadata) {
         if (!StringUtils.hasText(metadata)) {
             return new HashMap<>();
         }
         try {
-            return this.objectMapper.readValue(metadata, HashMap.class);
+            HashMap hashMap = this.objectMapper.readValue(metadata, HashMap.class);
+            return hashMap;
         } catch (JsonProcessingException e) {
             log.warn("路由元信息转换为HashMap对象出现错误: {}", metadata);
             throw new RuntimeException("路由元信息转换为HashMap对象出现错误");
@@ -88,12 +90,13 @@ public class GatewayRouteService {
     /**
      * metadata路由工厂(String)转换为LinkedHashMap
      */
-    private LinkedHashMap metadataToLinkedHashMap(String metadata) {
+    private LinkedHashMap<String, String> metadataToLinkedHashMap(String metadata) {
         if (!StringUtils.hasText(metadata)) {
             return new LinkedHashMap<>();
         }
         try {
-            return this.objectMapper.readValue(metadata, LinkedHashMap.class);
+            LinkedHashMap map = this.objectMapper.readValue(metadata, LinkedHashMap.class);
+            return map;
         } catch (JsonProcessingException e) {
             log.warn("路由工厂参数转换为LinkedHashMap对象出现错误: {}", metadata);
             throw new RuntimeException("路由元信息转换为HashMap对象出现错误");

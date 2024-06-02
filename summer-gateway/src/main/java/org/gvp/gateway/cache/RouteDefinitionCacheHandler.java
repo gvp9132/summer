@@ -18,11 +18,8 @@ public class RouteDefinitionCacheHandler {
 
     public void saveRouteDefinitions(List<RouteDefinition> routeDefinitions) {
         log.debug("缓存网关路由信息: {}", routeDefinitions);
-        if (routeDefinitions.isEmpty()) {
-            throw new RuntimeException("需要缓存的路由信息为空");
-        }
         this.redisTemplate.unlink(ROUTE_DEFINITION_PREFIX)
-                .thenMany(this.redisTemplate.opsForSet().add(ROUTE_DEFINITION_PREFIX, routeDefinitions.toArray(new RouteDefinition[0])))
+                .thenMany(this.redisTemplate.opsForSet().add(ROUTE_DEFINITION_PREFIX, routeDefinitions.toArray(new RouteDefinition[routeDefinitions.size()])))
                 .subscribe(e -> log.debug("清除并缓存网关路由信息: {}", e));
 
     }

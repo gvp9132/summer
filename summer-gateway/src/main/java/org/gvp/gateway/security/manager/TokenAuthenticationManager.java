@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 public class TokenAuthenticationManager implements ReactiveAuthenticationManager {
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
-        log.debug("Token认证管理器: {}",authentication);
+        log.error("Token认证管理器: {}",authentication);
         return Mono.empty();
     }
 }

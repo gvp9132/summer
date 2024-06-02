@@ -10,11 +10,18 @@ spring:
   threads:
     virtual:
       enabled: true
+  cloud:
+    gateway:
+      enabled: true
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
 summer:
   gateway:
     jwt:
       secret: summer
-      expire-time: 3600
+      expire-time: 36000
       jwt-id: jwt-id
       issuer: summer-gvp9132
       audience:
@@ -29,3 +36,4 @@ summer:
         - /actuator/**
         - /login/**
         - /logout/**
+        - /root/**

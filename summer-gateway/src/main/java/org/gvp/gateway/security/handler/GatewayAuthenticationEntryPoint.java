@@ -22,7 +22,11 @@ public class GatewayAuthenticationEntryPoint implements ServerAuthenticationEntr
     private final ResponseHandler responseHandler;
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
-        log.error("用户身份认证失败");
+        log.warn("用户身份认证失败,{}",exchange.getResponse().getStatusCode());
+        if (exchange.getResponse().getStatusCode().isSameCodeAs(HttpStatus.FAILED_DEPENDENCY)){
+            log.error("用户token过期,请刷新,或者重新登录");
+            return responseHandler.responseWrite(exchange, Result.resultCoder(ResultCode.TOKEN_EXPIRED), HttpStatus.UNAUTHORIZED);
+        }
         return responseHandler.responseWrite(exchange, Result.resultCoder(ResultCode.UNAUTHORIZED), HttpStatus.UNAUTHORIZED);
     }
 }

@@ -70,7 +70,7 @@
             <DefaultRolloverStrategy max="15" />
         </RollingRandomAccessFile>
     </Appenders>
-   <Loggers>
+    <Loggers>
         <!-- 设置打印sql语句配置开始,以下两者配合使用,可以优化日志的输出信息,减少一些不必要信息的输出 -->
         <!-- 设置java.sql包下的日志只打印DEBUG及以上级别的日志,此设置可以支持sql语句的日志打印 -->
         <logger name="java.sql" level="DEBUG" additivity="false">
@@ -79,8 +79,8 @@
         <!--  includeLocation="false": 设置是否在日志输出中包含日志记录的位置信息(文件名、行号等)。设置为 false 可以减少日志输出的信息量,提高性能 -->
         <Root level="info" includeLocation="false">
             <AppenderRef ref="Console"/>
-<!--            <AppenderRef ref="RollingFileDebug"/>-->
-<!--            <AppenderRef ref="RollingFileInfo"/>-->
+            <!--            <AppenderRef ref="RollingFileDebug"/>-->
+            <!--            <AppenderRef ref="RollingFileInfo"/>-->
             <AppenderRef ref="RollingFileWarn" />
             <AppenderRef ref="RollingFileError" />
         </Root>

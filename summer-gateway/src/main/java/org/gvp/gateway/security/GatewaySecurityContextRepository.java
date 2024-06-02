@@ -8,6 +8,7 @@ import org.gvp.gateway.security.jwt.JsonWebToken;
 import org.gvp.gateway.security.jwt.TokenInfo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -57,6 +58,9 @@ public class GatewaySecurityContextRepository implements ServerSecurityContextRe
             log.error("用户token中的用户名为空");
             return Mono.empty();
         }
+        ServerHttpRequest request = exchange.getRequest().mutate()
+                .headers(httpHeaders -> httpHeaders.set(HttpHeaders.AUTHORIZATION,"")).build();
+        exchange.mutate().request(request);
         return this.createUserContext(exchange,tokenInfo);
     }
 

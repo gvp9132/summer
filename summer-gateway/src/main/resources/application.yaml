@@ -15,4 +15,14 @@ spring:
   profiles:
     active:
       - dev
-      - database
+      - db
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: test-summer-filter
+#          predicates:
+#            - Path=/manager/admin/menu/tree/navigate
+#          order: 0
+#          uri: lb://summer-manager
+#          filters:
+#            - AddRequestUserInfo=testkks
